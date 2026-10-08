@@ -118,4 +118,17 @@ public class ParkingServiceTest {
         verify(parkingSpotDAO, Mockito.never()).getNextAvailableSlot(any(ParkingType.class));
         assertNull(parkingSpot);
     }
+    @Test
+    public void processExitingVehicleTestUnableToUpdateTicket() throws Exception {
+        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+        Ticket ticket = new Ticket();
+        ticket.setParkingSpot(new ParkingSpot(1, ParkingType.CAR, false));
+        when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
+        when(ticketDAO.getNbTicket(anyString())).thenReturn(1);
+        when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
+
+        parkingService.processExitingVehicle();
+
+        verify(parkingSpotDAO, never()).updateParking(any(ParkingSpot.class));
+    }
 }

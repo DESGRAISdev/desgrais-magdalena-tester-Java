@@ -37,5 +37,6 @@ public class FareCalculatorService {
         if (discount) {
             ticket.setPrice(ticket.getPrice()*0.95);
         }
+        ticket.setPrice(Math.round(ticket.getPrice() * 100.0) / 100.0);
     }
 }
